@@ -22,10 +22,11 @@ const Graph = (props) => {
 
     // SELECTING DIMENSIONS
     const [x, setX] = useState(graph.xAxis);
-    const [y, setY] = useState('');
+    const [y, setY] = useState(graph.yAxis);
 
-    console.log(selectedTable)
-    console.log(graph.xAxis)
+    // console.log(selectedTable)
+    // console.log('X: ', x)
+    // console.log('Y: ', y)
 
     // FETCHING DEFAULT TABLE DATA
     useEffect(() => {
@@ -43,6 +44,7 @@ const Graph = (props) => {
 
     // GETTING DATA FROM THE SELECTED SOURCE TABLE
     const handleSelection = (e) => {
+        e.preventDefault();
         if (e.target.value !== 'Please select Source Table') {
             setSelectedTable(e.target.value);
             axios
@@ -66,8 +68,12 @@ const Graph = (props) => {
     // UPDATING X AND Y AXIS
     const handleX = (e) => {
         setX(e.target.value)
-        updateGraph(graph._id, selectedTable, e.target.value, '', index);
-    }
+        updateGraph(graph._id, selectedTable, e.target.value, y, index);
+    };
+    const handleY = (e) => {
+        setY(e.target.value)
+        updateGraph(graph._id, selectedTable, x, e.target.value, index);
+    };
     return (
         <div className='Graph'>
             <div>
@@ -88,7 +94,7 @@ const Graph = (props) => {
                     </select>
                 : null }
                 { selectedTable !== '' ?
-                    <select onChange={(e) => {setY(e.target.value)}}>
+                    <select onChange={handleY} defaultValue={y}>
                         {headersAll.map((header, index) => {
                             return (
                                 <option key={index} value={header}>{header}</option>

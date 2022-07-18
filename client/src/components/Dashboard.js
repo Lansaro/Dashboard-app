@@ -61,23 +61,25 @@ const Dashboard = () => {
                 xAxis: x,
                 yAxis: y
             })
-            .then((response) => {console.log(response)})
+            .then(() => {fetchGraphsData()})
             .catch((err) => {console.log(err.response)})
         // const arrAfterIndex = [...graphArr.slice(index + 1)];
         // setGraphArr(
         //     [...graphArr.slice(0, index), graphObj].concat(arrAfterIndex)
         // );
     };
-    const deleteGraph = (id, graphIndex) => {
+    const deleteGraph = async (id, graphIndex) => {
         axios
             .delete(`http://localhost:8000/api/graph/${id}`)
-            .then(() => {
-                const filteredGraphs = graphArr.filter((graph, index) => {
-                    return graphIndex !== index;
-                });
-                setGraphArr(filteredGraphs);
-            })
-            .catch((err) => {console.log(err.response)})
+            .then(() => {fetchGraphsData()})
+                // () => {
+                // const filteredGraphs = graphArr.filter((graph, index) => {
+                //     return graphIndex !== index;
+                // });
+                // setGraphArr(filteredGraphs);
+            // })
+            .catch((err) => {console.log(err.response)});
+        
     };
     const deleteTable = (id, tableIndex) => {
         axios
@@ -87,6 +89,7 @@ const Dashboard = () => {
                     return tableIndex !== index;
                 });
                 setTablesArr(filteredTables);
+                fetchTablesData();
             })
             .catch((err) => {console.log(err.response)})
     };
