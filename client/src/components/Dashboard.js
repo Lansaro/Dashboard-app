@@ -6,6 +6,7 @@ import VerticalLineChart from './VerticalLineChart';
 import SimpleAreaChart from './AreaChart';
 import StackedAreaChart from './StackedAreaChart';
 import PercentAreaChart from './PercentAreaChart';
+import StackedBarChart from './StackedBarChart';
 import Table from './Table';
 
 const Dashboard = () => {
@@ -16,6 +17,7 @@ const Dashboard = () => {
     const fileReader = new FileReader();
     const [tableName, setTableName] = useState('');
     const [graphType, setGraphType] = useState('Bar');
+    
     const csvFileToArray = string => {
         const csvHeader = string.slice(0, string.indexOf('\n')).split(',');
         const csvRows = string.slice(string.indexOf('\n') + 1).split('\n');
@@ -30,6 +32,36 @@ const Dashboard = () => {
         setArray(array);
     };
     const headerKeys = Object.keys(Object.assign({}, ...array));
+
+    // PREVIEW CSV FILE TABLE
+    const handlePreview = (e) => {
+        e.preventDefault();
+        if (file) {
+        fileReader.onload = function (event) {
+            const text = event.target.result;
+            csvFileToArray(text);
+        };
+        fileReader.readAsText(file);
+        }
+    };
+
+    // SUBMITTING CSV FILE TO DB
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (file) {
+        axios
+            .post('http://localhost:8000/api/JSON', {
+                tableName: tableName,
+                headers: headerKeys,
+                json: {array}
+            })
+            .then((response) => {
+                console.log('Successfully uploaded');
+                console.log(response);
+            })
+            .catch((error) => console.log(error.response))
+        }
+    };
 
     // FETCHING DATA
     const fetchGraphsData = () => {
@@ -56,7 +88,8 @@ const Dashboard = () => {
         'Vertical Line Chart',
         'Area Chart',
         'Stacked Area Chart',
-        'Percent Area Chart'
+        'Percent Area Chart',
+        'Stacked Bar Chart'
     ];
 
     // ADDING A GRAPH
@@ -67,21 +100,25 @@ const Dashboard = () => {
                 type: graphType,
                 tableId: '',
                 xAxis: '',
-                yAxis: ''
+                yAxis: '',
+                y2Axis: '',
+                y3Axis: ''
             })
             .then(() => {fetchGraphsData()})
             .catch((err) => {console.log(err.response)})
     };
 
     // UPDATING GRAPH
-    const updateGraph = (id, tableId, x, y, type, index) => {
+    const updateGraph = (id, tableId, x, y, a, b, type, index) => {
         // const graphObj = { ...graphArr[index] };
         axios
             .put(`http://localhost:8000/api/graph/${id}`, {
                 type: type,
                 tableId: tableId,
                 xAxis: x,
-                yAxis: y
+                yAxis: y,
+                y2Axis: a,
+                y3Axis: b
             })
             .then(() => {fetchGraphsData()})
             .catch((err) => {console.log(err.response)})
@@ -120,36 +157,6 @@ const Dashboard = () => {
             .catch((err) => {console.log(err.response)})
     };
 
-    // PREVIEW CSV FILE TABLE
-    const handlePreview = (e) => {
-        e.preventDefault();
-        if (file) {
-        fileReader.onload = function (event) {
-            const text = event.target.result;
-            csvFileToArray(text);
-        };
-        fileReader.readAsText(file);
-        }
-    };
-
-    // SUBMITTING CSV FILE TO DB
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (file) {
-        axios
-            .post('http://localhost:8000/api/JSON', {
-                tableName: tableName,
-                headers: headerKeys,
-                json: {array}
-            })
-            .then((response) => {
-                console.log('Successfully uploaded');
-                console.log(response);
-            })
-            .catch((error) => console.log(error.response))
-        }
-    };
-    
     return (
         <div>
             <div className='Main'>
@@ -185,16 +192,18 @@ const Dashboard = () => {
                     })}
                 </div>
                 <div className='Graphs'>
-                    <form onSubmit={addGraph}>
-                        <select onChange={(e) => setGraphType(e.target.value)} defaultValue={graphType}>
-                            {graphTypes.map((type, index) => {
-                                return (
-                                    <option key={index} value={type}>{type}</option>
-                                )
-                            })}
-                        </select>
-                        <button>Add</button>
-                    </form>
+                    <div className='Buttons'>
+                        <form onSubmit={addGraph}>
+                            <select class='form-select form-select-sm mb-1' onChange={(e) => setGraphType(e.target.value)} defaultValue={graphType}>
+                                {graphTypes.map((type, index) => {
+                                    return (
+                                        <option key={index} value={type}>{type}</option>
+                                    )
+                                })}
+                            </select>
+                            <button type='button' class='btn btn-success'>Add</button>
+                        </form>
+                    </div>
                     {graphArr.map((graph, index) => {
                         return (
                             <div key={index}>
@@ -202,6 +211,8 @@ const Dashboard = () => {
                                 <p className='Color'>Table ID: {graph.tableId}</p>
                                 <p className='Color'>X: {graph.xAxis}</p>
                                 <p className='Color'>Y: {graph.yAxis}</p>
+                                <p className='Color'>A: {graph.y2Axis}</p>
+                                <p className='Color'>B: {graph.y3Axis}</p>
                                 <p className='Color'>Type: {graph.type}</p> */}
                                 { graph.type === 'Bar Chart' ?
                                     <SimpleBarChart
@@ -245,6 +256,14 @@ const Dashboard = () => {
                                     />
                                 : graph.type === 'Percent Area Chart' ?
                                     <PercentAreaChart
+                                        tablesArr={ tablesArr }
+                                        graph={ graph }
+                                        index={ index }
+                                        updateGraph={ updateGraph }
+                                        deleteGraph={ deleteGraph }
+                                    />
+                                : graph.type === 'Stacked Bar Chart' ?
+                                    <StackedBarChart
                                         tablesArr={ tablesArr }
                                         graph={ graph }
                                         index={ index }

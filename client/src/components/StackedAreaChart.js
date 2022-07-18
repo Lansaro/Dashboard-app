@@ -26,8 +26,8 @@ const StackedAreaChart = (props) => {
     // SELECTING DIMENSIONS
     const [x, setX] = useState(graph.xAxis);
     const [y, setY] = useState(graph.yAxis);
-    const [a, setA] = useState('');
-    const [b, setB] = useState('');
+    const [a, setA] = useState(graph.y2Axis);
+    const [b, setB] = useState(graph.y3Axis);
 
     // console.log(selectedTable)
     // console.log('X: ', x)
@@ -58,9 +58,11 @@ const StackedAreaChart = (props) => {
                     setHeaders(response.data.headers);
                     setApiData(response.data.json.array);
                     if (response.data.json) {
-                        updateGraph(graph._id, e.target.value, '', '', graph.type, index);
+                        updateGraph(graph._id, e.target.value, '', '', '', '', graph.type, index);
                         setX('');
                         setY('');
+                        setA('');
+                        setB('');
                     }
                 })
                 .catch((error) => {console.log(error.response)});
@@ -70,24 +72,28 @@ const StackedAreaChart = (props) => {
             setSelectedTable('');
             setX('');
             setY('');
-            updateGraph(graph._id, '', '', graph.type, index);
+            setA('');
+            setB('');
+            updateGraph(graph._id, '', '', '', '', graph.type, index);
         }
     };
 
     // UPDATING X AND Y AXIS
     const handleX = (e) => {
-        setX(e.target.value)
-        updateGraph(graph._id, selectedTable, e.target.value, y, graph.type, index);
+        setX(e.target.value);
+        updateGraph(graph._id, selectedTable, e.target.value, y, a, b, graph.type, index);
     };
     const handleY = (e) => {
-        setY(e.target.value)
-        updateGraph(graph._id, selectedTable, x, e.target.value, graph.type, index);
+        setY(e.target.value);
+        updateGraph(graph._id, selectedTable, x, e.target.value, a, b, graph.type, index);
     };
     const handleA = (e) => {
-        setA(e.target.value)
+        setA(e.target.value);
+        updateGraph(graph._id, selectedTable, x, y, e.target.value, b, graph.type, index);
     };
     const handleB = (e) => {
-        setB(e.target.value)
+        setB(e.target.value);
+        updateGraph(graph._id, selectedTable, x, y, a, e.target.value, graph.type, index);
     };
 
     return (
@@ -166,7 +172,7 @@ const StackedAreaChart = (props) => {
                         />
                         <Tooltip
                             labelStyle={{ color: 'green', fontWeight: 'bold' }}
-                            itemStyle={{ color: 'red', fontWeight: 'bold' }}
+                            itemStyle={{ color: 'black', fontWeight: 'bold' }}
                             formatter={(value) => new Intl.NumberFormat('en').format(value)}
                         />
                         <Area

@@ -14,6 +14,10 @@ const HorizontalLineChart = (props) => {
     const [selectedTable, setSelectedTable] = useState(graph.tableId);
     const [apiData, setApiData] = useState([]);
     const [headers, setHeaders] = useState([]);
+
+    // GRAPH TYPE
+    const [type, setType] = useState(graph.type);
+
     const headersAll = ['Select Column', ...headers]
 
     // DATA ARRAY TO POPULATE GRAPH
@@ -22,8 +26,10 @@ const HorizontalLineChart = (props) => {
     // SELECTING DIMENSIONS
     const [x, setX] = useState(graph.xAxis);
     const [y, setY] = useState(graph.yAxis);
+    const [a, setA] = useState(graph.y2Axis);
+    const [b, setB] = useState(graph.y3Axis);
 
-    // console.log(data)
+    // console.log(selectedTable)
     // console.log('X: ', x)
     // console.log('Y: ', y)
 
@@ -52,9 +58,11 @@ const HorizontalLineChart = (props) => {
                     setHeaders(response.data.headers);
                     setApiData(response.data.json.array);
                     if (response.data.json) {
-                        updateGraph(graph._id, e.target.value, '', '', graph.type, index);
+                        updateGraph(graph._id, e.target.value, '', '', '', '', graph.type, index);
                         setX('');
                         setY('');
+                        setA('');
+                        setB('');
                     }
                 })
                 .catch((error) => {console.log(error.response)});
@@ -64,18 +72,28 @@ const HorizontalLineChart = (props) => {
             setSelectedTable('');
             setX('');
             setY('');
-            updateGraph(graph._id, '', '', graph.type, index);
+            setA('');
+            setB('');
+            updateGraph(graph._id, '', '', '', '', graph.type, index);
         }
     };
 
     // UPDATING X AND Y AXIS
     const handleX = (e) => {
-        setX(e.target.value)
-        updateGraph(graph._id, selectedTable, e.target.value, y, graph.type, index);
+        setX(e.target.value);
+        updateGraph(graph._id, selectedTable, e.target.value, y, a, b, graph.type, index);
     };
     const handleY = (e) => {
-        setY(e.target.value)
-        updateGraph(graph._id, selectedTable, x, e.target.value, graph.type, index);
+        setY(e.target.value);
+        updateGraph(graph._id, selectedTable, x, e.target.value, a, b, graph.type, index);
+    };
+    const handleA = (e) => {
+        setA(e.target.value);
+        updateGraph(graph._id, selectedTable, x, y, e.target.value, b, graph.type, index);
+    };
+    const handleB = (e) => {
+        setB(e.target.value);
+        updateGraph(graph._id, selectedTable, x, y, a, e.target.value, graph.type, index);
     };
 
     return (
@@ -98,7 +116,25 @@ const HorizontalLineChart = (props) => {
                     </select>
                 : null }
                 { selectedTable !== '' ?
-                    <select onChange={handleY} defaultValue={y}>
+                    <select onChange={handleY}>
+                        {headersAll.map((header, index) => {
+                            return (
+                                <option key={index} value={header}>{header}</option>
+                            )
+                        })}
+                    </select>
+                : null }
+                { selectedTable !== '' ?
+                    <select onChange={handleA}>
+                        {headersAll.map((header, index) => {
+                            return (
+                                <option key={index} value={header}>{header}</option>
+                            )
+                        })}
+                    </select>
+                : null }
+                { selectedTable !== '' ?
+                    <select onChange={handleB}>
                         {headersAll.map((header, index) => {
                             return (
                                 <option key={index} value={header}>{header}</option>
@@ -137,15 +173,24 @@ const HorizontalLineChart = (props) => {
                         />
                         <Tooltip
                             labelStyle={{ color: 'green', fontWeight: 'bold' }}
-                            itemStyle={{ color: 'red', fontWeight: 'bold' }}
+                            itemStyle={{ color: 'black', fontWeight: 'bold' }}
                             formatter={(value) => new Intl.NumberFormat('en').format(value)}
                         />
                         <Legend />
                         <Line
                             type='monotone'
                             dataKey={y}
-                            stroke='#feb201'
-                            activeDot={{ r: 8 }}
+                            stroke='#8884d8'
+                        />
+                        <Line
+                            type='monotone'
+                            dataKey={a}
+                            stroke='#82ca9d'
+                        />
+                        <Line
+                            type='monotone'
+                            dataKey={b}
+                            stroke='#ffc658'
                         />
                     </LineChart>
                 </ResponsiveContainer>

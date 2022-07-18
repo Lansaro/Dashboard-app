@@ -56,7 +56,7 @@ const SimpleAreaChart = (props) => {
                     setHeaders(response.data.headers);
                     setApiData(response.data.json.array);
                     if (response.data.json) {
-                        updateGraph(graph._id, e.target.value, '', '', graph.type, index);
+                        updateGraph(graph._id, e.target.value, '', '', '', '', graph.type, index);
                         setX('');
                         setY('');
                     }
@@ -68,18 +68,18 @@ const SimpleAreaChart = (props) => {
             setSelectedTable('');
             setX('');
             setY('');
-            updateGraph(graph._id, '', '', graph.type, index);
+            updateGraph(graph._id, '', '', '', '', graph.type, index);
         }
     };
 
     // UPDATING X AND Y AXIS
     const handleX = (e) => {
         setX(e.target.value)
-        updateGraph(graph._id, selectedTable, e.target.value, y, graph.type, index);
+        updateGraph(graph._id, selectedTable, e.target.value, y, '', '', graph.type, index);
     };
     const handleY = (e) => {
         setY(e.target.value)
-        updateGraph(graph._id, selectedTable, x, e.target.value, graph.type, index);
+        updateGraph(graph._id, selectedTable, x, e.target.value, '', '', graph.type, index);
     };
 
     return (
@@ -140,14 +140,14 @@ const SimpleAreaChart = (props) => {
                         />
                         <Tooltip
                             labelStyle={{ color: 'green', fontWeight: 'bold' }}
-                            itemStyle={{ color: 'red', fontWeight: 'bold' }}
+                            itemStyle={{ color: 'black', fontWeight: 'bold' }}
                             formatter={(value) => new Intl.NumberFormat('en').format(value)}
                         />
                         <Area
                             type='monotone'
                             dataKey={y}
-                            stroke='#82ca9d'
-                            fill='#82ca9d'
+                            stroke='#feb201'
+                            fill='#feb201'
                         />
                     </AreaChart>
                 </ResponsiveContainer>

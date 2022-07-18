@@ -26,14 +26,14 @@ const PercentAreaChart = (props) => {
     // SELECTING DIMENSIONS
     const [x, setX] = useState(graph.xAxis);
     const [y, setY] = useState(graph.yAxis);
-    const [a, setA] = useState('');
-    const [b, setB] = useState('');
+    const [a, setA] = useState(graph.y2Axis);
+    const [b, setB] = useState(graph.y3Axis);
 
     // console.log(selectedTable)
     // console.log('X: ', x)
     // console.log('Y: ', y)
 
-    // const toPercent = (decimal, fixed = 0) => `${(decimal * 100).toFixed(fixed)}%`;
+    const toPercent = (decimal) => `${(decimal * 100)}%`;
     // const getPercent = (value, total) => {
     //     const ratio = total > 0 ? value / total : 0;
     //     return toPercent(ratio, 2);
@@ -79,9 +79,11 @@ const PercentAreaChart = (props) => {
                     setHeaders(response.data.headers);
                     setApiData(response.data.json.array);
                     if (response.data.json) {
-                        updateGraph(graph._id, e.target.value, '', '', graph.type, index);
+                        updateGraph(graph._id, e.target.value, '', '', '', '', graph.type, index);
                         setX('');
                         setY('');
+                        setA('');
+                        setB('');
                     }
                 })
                 .catch((error) => {console.log(error.response)});
@@ -91,24 +93,28 @@ const PercentAreaChart = (props) => {
             setSelectedTable('');
             setX('');
             setY('');
-            updateGraph(graph._id, '', '', graph.type, index);
+            setA('');
+            setB('');
+            updateGraph(graph._id, '', '', '', '', graph.type, index);
         }
     };
 
     // UPDATING X AND Y AXIS
     const handleX = (e) => {
-        setX(e.target.value)
-        updateGraph(graph._id, selectedTable, e.target.value, y, graph.type, index);
+        setX(e.target.value);
+        updateGraph(graph._id, selectedTable, e.target.value, y, a, b, graph.type, index);
     };
     const handleY = (e) => {
-        setY(e.target.value)
-        updateGraph(graph._id, selectedTable, x, e.target.value, graph.type, index);
+        setY(e.target.value);
+        updateGraph(graph._id, selectedTable, x, e.target.value, a, b, graph.type, index);
     };
     const handleA = (e) => {
-        setA(e.target.value)
+        setA(e.target.value);
+        updateGraph(graph._id, selectedTable, x, y, e.target.value, b, graph.type, index);
     };
     const handleB = (e) => {
-        setB(e.target.value)
+        setB(e.target.value);
+        updateGraph(graph._id, selectedTable, x, y, a, e.target.value, graph.type, index);
     };
 
     return (
@@ -164,6 +170,7 @@ const PercentAreaChart = (props) => {
                         width={500}
                         height={400}
                         data={data}
+                        isAnimationActive={true}
                         stackOffset='expand'
                         margin={{
                             top: 50,
@@ -182,10 +189,11 @@ const PercentAreaChart = (props) => {
                         />
                         <YAxis
                             tick={{ fill: 'white', fontWeight: 'bold' }}
+                            tickFormatter={toPercent}
                         />
                         <Tooltip
                             labelStyle={{ color: 'green', fontWeight: 'bold' }}
-                            itemStyle={{ color: 'red', fontWeight: 'bold' }}
+                            itemStyle={{ color: 'black', fontWeight: 'bold' }}
                             content={renderTooltipContent}
                         />
                         <Area

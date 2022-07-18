@@ -1,8 +1,8 @@
 import React, { useState, useEffect, PureComponent } from 'react';
 import axios from 'axios';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const VerticalLineChart = (props) => {
+const StackedBarChart = (props) => {
     // PASSING AVAILABLE TABLES TO CHOOSE FROM
     // GETTING INDIVIDUAL GRAPH INFO
     // PASSING DELETE FUNCTION FOR THE GRAPH
@@ -145,8 +145,7 @@ const VerticalLineChart = (props) => {
             </div>
             <div className='Visual'>
                 <ResponsiveContainer width='90%' height='90%'>
-                    <LineChart
-                        layout='vertical'
+                    <BarChart
                         width={500}
                         height={300}
                         isAnimationActive={true}
@@ -159,18 +158,18 @@ const VerticalLineChart = (props) => {
                         }}
                     >
                         <CartesianGrid
-                            horizontal={false}
+                            vertical={false}
                             strokeDasharray='3 3'
                         />
                         <XAxis
+                            dataKey={x}
+                            tick={{ fill: 'white', fontWeight: 'bold' }}
+                        />
+                        <YAxis
                             type='number'
                             tick={{ fill: 'white', fontWeight: 'bold' }}
                             domain={['auto', dataMax => (dataMax * 1.2)]}
                             tickFormatter={(value) => new Intl.NumberFormat('en', { notation: "compact", compactDisplay: "short" }).format(value)}
-                        />
-                        <YAxis
-                            dataKey={x} type='category'
-                            tick={{ fill: 'white', fontWeight: 'bold' }}
                         />
                         <Tooltip
                             labelStyle={{ color: 'green', fontWeight: 'bold' }}
@@ -178,22 +177,22 @@ const VerticalLineChart = (props) => {
                             formatter={(value) => new Intl.NumberFormat('en').format(value)}
                         />
                         <Legend />
-                        <Line
-                            type='monotone'
+                        <Bar
                             dataKey={y}
-                            stroke='#8884d8'
+                            fill='#8884d8'
+                            stackId='a'
                         />
-                        <Line
-                            type='monotone'
+                        <Bar
                             dataKey={a}
-                            stroke='#82ca9d'
+                            fill='#82ca9d'
+                            stackId='a'
                         />
-                        <Line
-                            type='monotone'
+                        <Bar
                             dataKey={b}
-                            stroke='#ffc658'
+                            fill='#ffc658'
+                            stackId='a'
                         />
-                    </LineChart>
+                    </BarChart>
                 </ResponsiveContainer>
             </div>
             <span className='Delete' onClick={() => deleteGraph(graph._id, index)}>&times;</span>
@@ -201,4 +200,4 @@ const VerticalLineChart = (props) => {
     )
 }
 
-export default VerticalLineChart;
+export default StackedBarChart;
