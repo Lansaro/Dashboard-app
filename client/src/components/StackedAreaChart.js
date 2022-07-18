@@ -2,7 +2,7 @@ import React, { useState, useEffect, PureComponent } from 'react';
 import axios from 'axios';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const SimpleAreaChart = (props) => {
+const StackedAreaChart = (props) => {
     // PASSING AVAILABLE TABLES TO CHOOSE FROM
     // GETTING INDIVIDUAL GRAPH INFO
     // PASSING DELETE FUNCTION FOR THE GRAPH
@@ -26,6 +26,8 @@ const SimpleAreaChart = (props) => {
     // SELECTING DIMENSIONS
     const [x, setX] = useState(graph.xAxis);
     const [y, setY] = useState(graph.yAxis);
+    const [a, setA] = useState('');
+    const [b, setB] = useState('');
 
     // console.log(selectedTable)
     // console.log('X: ', x)
@@ -81,6 +83,12 @@ const SimpleAreaChart = (props) => {
         setY(e.target.value)
         updateGraph(graph._id, selectedTable, x, e.target.value, graph.type, index);
     };
+    const handleA = (e) => {
+        setA(e.target.value)
+    };
+    const handleB = (e) => {
+        setB(e.target.value)
+    };
 
     return (
         <div className='Graph'>
@@ -102,7 +110,25 @@ const SimpleAreaChart = (props) => {
                     </select>
                 : null }
                 { selectedTable !== '' ?
-                    <select onChange={handleY} defaultValue={y}>
+                    <select onChange={handleY}>
+                        {headersAll.map((header, index) => {
+                            return (
+                                <option key={index} value={header}>{header}</option>
+                            )
+                        })}
+                    </select>
+                : null }
+                { selectedTable !== '' ?
+                    <select onChange={handleA}>
+                        {headersAll.map((header, index) => {
+                            return (
+                                <option key={index} value={header}>{header}</option>
+                            )
+                        })}
+                    </select>
+                : null }
+                { selectedTable !== '' ?
+                    <select onChange={handleB}>
                         {headersAll.map((header, index) => {
                             return (
                                 <option key={index} value={header}>{header}</option>
@@ -146,8 +172,23 @@ const SimpleAreaChart = (props) => {
                         <Area
                             type='monotone'
                             dataKey={y}
+                            stroke='#8884d8'
+                            fill='#8884d8'
+                            stackId='1'
+                        />
+                        <Area
+                            type='monotone'
+                            dataKey={a}
                             stroke='#82ca9d'
                             fill='#82ca9d'
+                            stackId='1'
+                        />
+                        <Area
+                            type='monotone'
+                            dataKey={b}
+                            stroke='#ffc658'
+                            fill='#ffc658'
+                            stackId='1'
                         />
                     </AreaChart>
                 </ResponsiveContainer>
@@ -157,4 +198,4 @@ const SimpleAreaChart = (props) => {
     )
 }
 
-export default SimpleAreaChart;
+export default StackedAreaChart;

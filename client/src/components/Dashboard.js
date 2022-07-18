@@ -3,6 +3,8 @@ import axios from 'axios';
 import SimpleBarChart from './BarChart';
 import HorizontalLineChart from './HorizontalLineChart';
 import VerticalLineChart from './VerticalLineChart';
+import SimpleAreaChart from './AreaChart';
+import StackedAreaChart from './StackedAreaChart';
 import Table from './Table';
 
 const Dashboard = () => {
@@ -50,7 +52,9 @@ const Dashboard = () => {
     const graphTypes = [
         'Bar Chart',
         'Horizontal Line Chart',
-        'Vertical Line Chart'
+        'Vertical Line Chart',
+        'Area Chart',
+        'Stacked Area Chart'
     ];
 
     // ADDING A GRAPH
@@ -192,11 +196,11 @@ const Dashboard = () => {
                     {graphArr.map((graph, index) => {
                         return (
                             <div key={index}>
-                                <p className='Color'>Graph ID: {graph._id}</p>
+                                {/* <p className='Color'>Graph ID: {graph._id}</p>
                                 <p className='Color'>Table ID: {graph.tableId}</p>
                                 <p className='Color'>X: {graph.xAxis}</p>
                                 <p className='Color'>Y: {graph.yAxis}</p>
-                                <p className='Color'>Type: {graph.type}</p>
+                                <p className='Color'>Type: {graph.type}</p> */}
                                 { graph.type === 'Bar Chart' ?
                                     <SimpleBarChart
                                         tablesArr={ tablesArr }
@@ -215,6 +219,22 @@ const Dashboard = () => {
                                     />
                                 : graph.type === 'Vertical Line Chart' ?
                                     <VerticalLineChart
+                                        tablesArr={ tablesArr }
+                                        graph={ graph }
+                                        index={ index }
+                                        updateGraph={ updateGraph }
+                                        deleteGraph={ deleteGraph }
+                                    />
+                                : graph.type === 'Area Chart' ?
+                                    <SimpleAreaChart
+                                        tablesArr={ tablesArr }
+                                        graph={ graph }
+                                        index={ index }
+                                        updateGraph={ updateGraph }
+                                        deleteGraph={ deleteGraph }
+                                    />
+                                : graph.type === 'Stacked Area Chart' ?
+                                    <StackedAreaChart
                                         tablesArr={ tablesArr }
                                         graph={ graph }
                                         index={ index }
