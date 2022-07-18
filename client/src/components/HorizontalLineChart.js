@@ -2,7 +2,7 @@ import React, { useState, useEffect, PureComponent } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const MyLineChart = (props) => {
+const HorizontalLineChart = (props) => {
     // PASSING AVAILABLE TABLES TO CHOOSE FROM
     // GETTING INDIVIDUAL GRAPH INFO
     // PASSING DELETE FUNCTION FOR THE GRAPH
@@ -108,10 +108,11 @@ const MyLineChart = (props) => {
                 : null }
             </div>
             <div className='Visual'>
-                <ResponsiveContainer width='100%' height='100%'>
+                <ResponsiveContainer width='90%' height='90%'>
                     <LineChart
                         width={500}
                         height={300}
+                        isAnimationActive={true}
                         data={data}
                         margin={{
                             top: 50,
@@ -120,15 +121,32 @@ const MyLineChart = (props) => {
                             bottom: 0,
                         }}
                     >
-                        <CartesianGrid vertical={false} strokeDasharray='3 3' />
-                        <XAxis dataKey={x} tick={{ fill: 'white', fontWeight: 'bold' }}/>
-                        <YAxis type='number' tick={{ fill: 'white', fontWeight: 'bold' }} domain={['auto', dataMax => (dataMax * 1.2)]}/>
+                        <CartesianGrid
+                            vertical={false}
+                            strokeDasharray='3 3'
+                        />
+                        <XAxis
+                            dataKey={x}
+                            tick={{ fill: 'white', fontWeight: 'bold' }}
+                        />
+                        <YAxis
+                            type='number'
+                            tick={{ fill: 'white', fontWeight: 'bold' }}
+                            domain={['auto', dataMax => (dataMax * 1.2)]}
+                            tickFormatter={(value) => new Intl.NumberFormat('en', { notation: "compact", compactDisplay: "short" }).format(value)}
+                        />
                         <Tooltip
                             labelStyle={{ color: 'green', fontWeight: 'bold' }}
                             itemStyle={{ color: 'red', fontWeight: 'bold' }}
+                            formatter={(value) => new Intl.NumberFormat('en').format(value)}
                         />
                         <Legend />
-                        <Line type='monotone' dataKey={y} stroke='#feb201' activeDot={{ r: 8 }} />
+                        <Line
+                            type='monotone'
+                            dataKey={y}
+                            stroke='#feb201'
+                            activeDot={{ r: 8 }}
+                        />
                     </LineChart>
                 </ResponsiveContainer>
             </div>
@@ -137,4 +155,4 @@ const MyLineChart = (props) => {
     )
 }
 
-export default MyLineChart;
+export default HorizontalLineChart;

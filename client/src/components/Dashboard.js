@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import MyBarChart from './BarChart';
-import MyLineChart from './LineChart';
+import SimpleBarChart from './BarChart';
+import HorizontalLineChart from './HorizontalLineChart';
+import VerticalLineChart from './VerticalLineChart';
 import Table from './Table';
 
 const Dashboard = () => {
@@ -48,7 +49,8 @@ const Dashboard = () => {
     // GRAPH TYPE SPECIFICATION
     const graphTypes = [
         'Bar Chart',
-        'Line Chart'
+        'Horizontal Line Chart',
+        'Vertical Line Chart'
     ];
 
     // ADDING A GRAPH
@@ -196,22 +198,38 @@ const Dashboard = () => {
                                 <p className='Color'>Y: {graph.yAxis}</p>
                                 <p className='Color'>Type: {graph.type}</p>
                                 { graph.type === 'Bar Chart' ?
-                                    <MyBarChart
+                                    <SimpleBarChart
                                         tablesArr={ tablesArr }
                                         graph={ graph }
                                         index={ index }
                                         updateGraph={ updateGraph }
                                         deleteGraph={ deleteGraph }
                                     />
-                                : graph.type === 'Line Chart' ?
-                                    <MyLineChart
+                                : graph.type === 'Horizontal Line Chart' ?
+                                    <HorizontalLineChart
                                         tablesArr={ tablesArr }
                                         graph={ graph }
                                         index={ index }
                                         updateGraph={ updateGraph }
                                         deleteGraph={ deleteGraph }
                                     />
-                                : null }
+                                : graph.type === 'Vertical Line Chart' ?
+                                    <VerticalLineChart
+                                        tablesArr={ tablesArr }
+                                        graph={ graph }
+                                        index={ index }
+                                        updateGraph={ updateGraph }
+                                        deleteGraph={ deleteGraph }
+                                    />
+                                : 
+                                    <SimpleBarChart
+                                        tablesArr={ tablesArr }
+                                        graph={ graph }
+                                        index={ index }
+                                        updateGraph={ updateGraph }
+                                        deleteGraph={ deleteGraph }
+                                    />
+                                }
                             </div>
                         )
                     })}
