@@ -5,6 +5,7 @@ import HorizontalLineChart from './HorizontalLineChart';
 import VerticalLineChart from './VerticalLineChart';
 import SimpleAreaChart from './AreaChart';
 import StackedAreaChart from './StackedAreaChart';
+import PercentAreaChart from './PercentAreaChart';
 import Table from './Table';
 
 const Dashboard = () => {
@@ -54,7 +55,8 @@ const Dashboard = () => {
         'Horizontal Line Chart',
         'Vertical Line Chart',
         'Area Chart',
-        'Stacked Area Chart'
+        'Stacked Area Chart',
+        'Percent Area Chart'
     ];
 
     // ADDING A GRAPH
@@ -235,6 +237,14 @@ const Dashboard = () => {
                                     />
                                 : graph.type === 'Stacked Area Chart' ?
                                     <StackedAreaChart
+                                        tablesArr={ tablesArr }
+                                        graph={ graph }
+                                        index={ index }
+                                        updateGraph={ updateGraph }
+                                        deleteGraph={ deleteGraph }
+                                    />
+                                : graph.type === 'Percent Area Chart' ?
+                                    <PercentAreaChart
                                         tablesArr={ tablesArr }
                                         graph={ graph }
                                         index={ index }
