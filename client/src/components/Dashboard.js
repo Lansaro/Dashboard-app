@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Graph from './Graph';
+import MyBarChart from './BarChart';
+import MyLineChart from './LineChart';
 import Table from './Table';
 
 const Dashboard = () => {
@@ -10,6 +11,7 @@ const Dashboard = () => {
     const [array, setArray] = useState([]);
     const fileReader = new FileReader();
     const [tableName, setTableName] = useState('');
+    const [graphType, setGraphType] = useState('Bar');
     const csvFileToArray = string => {
         const csvHeader = string.slice(0, string.indexOf('\n')).split(',');
         const csvRows = string.slice(string.indexOf('\n') + 1).split('\n');
@@ -24,6 +26,8 @@ const Dashboard = () => {
         setArray(array);
     };
     const headerKeys = Object.keys(Object.assign({}, ...array));
+
+    // FETCHING DATA
     const fetchGraphsData = () => {
         axios
             .get('http://localhost:8000/api/graph')
@@ -40,11 +44,19 @@ const Dashboard = () => {
         fetchGraphsData();
         fetchTablesData();
     }, []);
+
+    // GRAPH TYPE SPECIFICATION
+    const graphTypes = [
+        'Bar Chart',
+        'Line Chart'
+    ];
+
+    // ADDING A GRAPH
     const addGraph = (e) => {
         e.preventDefault();
         axios
             .post('http://localhost:8000/api/graph', {
-                type: '',
+                type: graphType,
                 tableId: '',
                 xAxis: '',
                 yAxis: ''
@@ -52,11 +64,13 @@ const Dashboard = () => {
             .then(() => {fetchGraphsData()})
             .catch((err) => {console.log(err.response)})
     };
-    const updateGraph = (id, tableId, x, y, index) => {
+
+    // UPDATING GRAPH
+    const updateGraph = (id, tableId, x, y, type, index) => {
         // const graphObj = { ...graphArr[index] };
         axios
             .put(`http://localhost:8000/api/graph/${id}`, {
-                type: '',
+                type: type,
                 tableId: tableId,
                 xAxis: x,
                 yAxis: y
@@ -68,6 +82,8 @@ const Dashboard = () => {
         //     [...graphArr.slice(0, index), graphObj].concat(arrAfterIndex)
         // );
     };
+
+    // DELETING GRAPH
     const deleteGraph = async (id, graphIndex) => {
         axios
             .delete(`http://localhost:8000/api/graph/${id}`)
@@ -81,6 +97,8 @@ const Dashboard = () => {
             .catch((err) => {console.log(err.response)});
         
     };
+
+    // DELETING TABLE
     const deleteTable = (id, tableIndex) => {
         axios
             .delete(`http://localhost:8000/api/JSON/${id}`)
@@ -93,6 +111,8 @@ const Dashboard = () => {
             })
             .catch((err) => {console.log(err.response)})
     };
+
+    // PREVIEW CSV FILE TABLE
     const handlePreview = (e) => {
         e.preventDefault();
         if (file) {
@@ -103,6 +123,8 @@ const Dashboard = () => {
         fileReader.readAsText(file);
         }
     };
+
+    // SUBMITTING CSV FILE TO DB
     const handleSubmit = (e) => {
         e.preventDefault();
         if (file) {
@@ -119,6 +141,7 @@ const Dashboard = () => {
             .catch((error) => console.log(error.response))
         }
     };
+    
     return (
         <div>
             <div className='Main'>
@@ -134,7 +157,7 @@ const Dashboard = () => {
                                 />
                             </div>
                         <div>
-                            <label htmlFor="tableName">Table Name</label>
+                            <label htmlFor='tableName'>Table Name</label>
                             <input type='text' value={tableName} onChange={(e) => setTableName(e.target.value)} />
                         </div>
                             <button onClick={(e) => {handlePreview(e)}}>PREVIEW CSV</button>
@@ -154,7 +177,16 @@ const Dashboard = () => {
                     })}
                 </div>
                 <div className='Graphs'>
-                    <button onClick={addGraph}>Add</button>
+                    <form onSubmit={addGraph}>
+                        <select onChange={(e) => setGraphType(e.target.value)} defaultValue={graphType}>
+                            {graphTypes.map((type, index) => {
+                                return (
+                                    <option key={index} value={type}>{type}</option>
+                                )
+                            })}
+                        </select>
+                        <button>Add</button>
+                    </form>
                     {graphArr.map((graph, index) => {
                         return (
                             <div key={index}>
@@ -162,13 +194,24 @@ const Dashboard = () => {
                                 <p className='Color'>Table ID: {graph.tableId}</p>
                                 <p className='Color'>X: {graph.xAxis}</p>
                                 <p className='Color'>Y: {graph.yAxis}</p>
-                                <Graph
-                                    tablesArr={ tablesArr }
-                                    graph={ graph }
-                                    index={ index }
-                                    updateGraph={ updateGraph }
-                                    deleteGraph={ deleteGraph }
-                                />
+                                <p className='Color'>Type: {graph.type}</p>
+                                { graph.type === 'Bar Chart' ?
+                                    <MyBarChart
+                                        tablesArr={ tablesArr }
+                                        graph={ graph }
+                                        index={ index }
+                                        updateGraph={ updateGraph }
+                                        deleteGraph={ deleteGraph }
+                                    />
+                                : graph.type === 'Line Chart' ?
+                                    <MyLineChart
+                                        tablesArr={ tablesArr }
+                                        graph={ graph }
+                                        index={ index }
+                                        updateGraph={ updateGraph }
+                                        deleteGraph={ deleteGraph }
+                                    />
+                                : null }
                             </div>
                         )
                     })}

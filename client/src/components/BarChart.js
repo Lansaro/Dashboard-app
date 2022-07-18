@@ -1,8 +1,8 @@
 import React, { useState, useEffect, PureComponent } from 'react';
 import axios from 'axios';
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const Graph = (props) => {
+const MyBarChart = (props) => {
     // PASSING AVAILABLE TABLES TO CHOOSE FROM
     // GETTING INDIVIDUAL GRAPH INFO
     // PASSING DELETE FUNCTION FOR THE GRAPH
@@ -14,6 +14,9 @@ const Graph = (props) => {
     const [selectedTable, setSelectedTable] = useState(graph.tableId);
     const [apiData, setApiData] = useState([]);
     const [headers, setHeaders] = useState([]);
+
+    // GRAPH TYPE
+    const [type, setType] = useState(graph.type);
 
     const headersAll = ['Select Column', ...headers]
 
@@ -28,7 +31,7 @@ const Graph = (props) => {
     // console.log('X: ', x)
     // console.log('Y: ', y)
 
-    // FETCHING DEFAULT TABLE DATA
+    // FETCHING CURRENT GRAPH/TABLE DATA
     useEffect(() => {
         if (selectedTable) {
             axios
@@ -53,27 +56,32 @@ const Graph = (props) => {
                     setHeaders(response.data.headers);
                     setApiData(response.data.json.array);
                     if (response.data.json) {
-                        updateGraph(graph._id, e.target.value, '', '', index);
+                        updateGraph(graph._id, e.target.value, '', '', graph.type, index);
+                        setX('');
+                        setY('');
                     }
                 })
                 .catch((error) => {console.log(error.response)});
         } else {
             setHeaders([]);
             setApiData([]);
-            setSelectedTable('')
-            updateGraph(graph._id, '', '', '', index);
+            setSelectedTable('');
+            setX('');
+            setY('');
+            updateGraph(graph._id, '', '', graph.type, index);
         }
     };
 
     // UPDATING X AND Y AXIS
     const handleX = (e) => {
         setX(e.target.value)
-        updateGraph(graph._id, selectedTable, e.target.value, y, index);
+        updateGraph(graph._id, selectedTable, e.target.value, y, graph.type, index);
     };
     const handleY = (e) => {
         setY(e.target.value)
-        updateGraph(graph._id, selectedTable, x, e.target.value, index);
+        updateGraph(graph._id, selectedTable, x, e.target.value, graph.type, index);
     };
+
     return (
         <div className='Graph'>
             <div>
@@ -104,33 +112,28 @@ const Graph = (props) => {
                 : null }
             </div>
             <div className='Visual'>
-                <ResponsiveContainer width='90%' height='85%'>
+                <ResponsiveContainer width='100%' height='100%'>
                     <BarChart
                         width={500}
                         height={300}
+                        isAnimationActive={true}
                         data={data}
                         margin={{
-                            top: 20,
-                            right: 20,
+                            top: 50,
+                            right: 50,
                             left: 20,
                             bottom: 0,
                         }}
                     >
-                        <CartesianGrid strokeDasharray='3 3' />
-                        <XAxis dataKey={x} />
-                        <YAxis type='number' domain={['auto', dataMax => (dataMax * 1.2)]}/>
-                        <Tooltip />
-                        {/* <Line
-                            type="monotone"
-                            dataKey="pv"
-                            stroke="#8884d8"
-                            activeDot={{ r: 8 }}
-                        /> */}
-                        {/* formatter={(value, entry, index) => <span className="text-color-class">{value}</span>} */}
+                        <CartesianGrid vertical={false} strokeDasharray='3 3' />
+                        <XAxis dataKey={x} tick={{ fill: 'white', fontWeight: 'bold' }}/>
+                        <YAxis type='number' tick={{ fill: 'white', fontWeight: 'bold' }} domain={['auto', dataMax => (dataMax * 1.2)]}/>
+                        <Tooltip
+                            labelStyle={{ color: 'green', fontWeight: 'bold' }}
+                            itemStyle={{ color: 'red', fontWeight: 'bold' }}
+                        />
                         <Legend />
-                        <Bar dataKey={y} fill='#cc0000' />
-                        <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-                    {/* <Bar dataKey='uv' fill='#8884d8' /> */}
+                        <Bar dataKey={y} fill='#feb201' />
                     </BarChart>
                 </ResponsiveContainer>
             </div>
@@ -139,4 +142,4 @@ const Graph = (props) => {
     )
 }
 
-export default Graph;
+export default MyBarChart;
