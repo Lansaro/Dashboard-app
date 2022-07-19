@@ -1,13 +1,21 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
+require('dotenv').config();
 
-app.use(cors());
+const
+    express = require('express'),
+    cookieParser = require('cookie-parser'),
+    app = express(),
+    cors = require('cors');
+
+
+require('./config/mongoose.config')(process.env.DB_NAME);
+
+app.use(cookieParser());
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+
 app.use(express.json({limit: '50mb'}), express.urlencoded({ extended: true }));
 
-require('./config/mongoose.config');
 require('./routes/user.routes')(app);
 require('./routes/JSON.routes')(app);
 require('./routes/graph.routes')(app);
 
-app.listen(8000, () => console.log('The server is all fired up on port 8000'));
+app.listen(process.env.DB_PORT, () => console.log(`The server is running on ${process.env.DB_PORT}`));

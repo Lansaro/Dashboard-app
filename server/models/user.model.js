@@ -2,26 +2,22 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const UserSchema = new mongoose.Schema({
-    firstName: {
+    name: {
         type: String,
-        required: [true, 'First Name is required'],
-    },
-    lastName: {
-        type: String,
-        required: [true, 'Last name is required'],
+        required: [true, 'Name is required'],
     },
     email: {
         type: String,
         required: [true, 'Email is required'],
         validate: {
-            validator: function (v) {return /^([\w-\.]+@([\w-]+\.)+[\w-]+)?$/.test(v);},
+            validator: (val) => /^([\w-\.]+@([\w-]+\.)+[\w-]+)?$/.test(val),
             message: 'Please enter a valid email address',
         },
     },
     password: {
         type: String,
         required: [true, 'Password is required'],
-        minlength: [8, 'Password must be 8 characters or longer'],
+        minlength: [5, 'Password must be 5 characters or longer'],
     },
 }, { timestamps: true });
 
@@ -36,7 +32,7 @@ UserSchema.pre('validate', function (next) {
     next();
 });
 
-UserSchema.pre('validate', function (next) {
+UserSchema.pre('save', function (next) {
     bcrypt
         .hash(this.password, 10)
         .then((hash) => {

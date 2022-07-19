@@ -183,17 +183,19 @@ const Dashboard = () => {
                             <button onClick={(e) => {handleSubmit(e)}}>SUBMIT CSV</button>
                         </form>
                     </div>
-                    {tablesArr.map((table, index) => {
-                        return (
-                            <div key={index}>
-                                <Table
-                                    table={ table }
-                                    index={ index }
-                                    deleteTable={ deleteTable }
-                                />
-                            </div>
-                        )
-                    })}
+                    <div className='Records'>
+                        {tablesArr.map((table, index) => {
+                            return (
+                                <div key={index}>
+                                    <Table
+                                        table={ table }
+                                        index={ index }
+                                        deleteTable={ deleteTable }
+                                    />
+                                </div>
+                            )
+                        })}
+                    </div>
                 </div>
                 <div className='Graphs'>
                     <div className='Buttons'>

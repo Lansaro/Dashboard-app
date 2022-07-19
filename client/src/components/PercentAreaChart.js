@@ -148,7 +148,7 @@ const PercentAreaChart = (props) => {
                     </select>
                 : <form onSubmit={ handleTableTitle }>
                     <div>
-                        <input type='text' id='tableTitle' value={tableTitle} onChange={(e) => setTableTitle(e.target.value)}/>
+                        <input placeholder='Enter Graph Name' type='text' id='tableTitle' value={tableTitle} onChange={(e) => setTableTitle(e.target.value)}/>
                     </div>
                     <button className='btn btn-warning'>Add</button>
                 </form> }
