@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const GraphSchema = new mongoose.Schema({
     type: String,
     tableId: String,
+    tableTitle: String,
     xAxis: String,
     yAxis: String,
     y2Axis: String,

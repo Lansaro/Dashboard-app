@@ -16,8 +16,9 @@ const Dashboard = () => {
     const [array, setArray] = useState([]);
     const fileReader = new FileReader();
     const [tableName, setTableName] = useState('');
-    const [graphType, setGraphType] = useState('Bar');
-    
+    const [graphType, setGraphType] = useState('Bar Chart');
+
+    // FILE READER
     const csvFileToArray = string => {
         const csvHeader = string.slice(0, string.indexOf('\n')).split(',');
         const csvRows = string.slice(string.indexOf('\n') + 1).split('\n');
@@ -46,7 +47,7 @@ const Dashboard = () => {
     };
 
     // SUBMITTING CSV FILE TO DB
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (file) {
         axios
@@ -58,6 +59,8 @@ const Dashboard = () => {
             .then((response) => {
                 console.log('Successfully uploaded');
                 console.log(response);
+                fetchTablesData();
+                setTableName('');
             })
             .catch((error) => console.log(error.response))
         }
@@ -99,6 +102,7 @@ const Dashboard = () => {
             .post('http://localhost:8000/api/graph', {
                 type: graphType,
                 tableId: '',
+                tableTitle: '',
                 xAxis: '',
                 yAxis: '',
                 y2Axis: '',
@@ -109,12 +113,13 @@ const Dashboard = () => {
     };
 
     // UPDATING GRAPH
-    const updateGraph = (id, tableId, x, y, a, b, type, index) => {
-        // const graphObj = { ...graphArr[index] };
+    const updateGraph = async (id, tableId, x, y, a, b, tableTitle, type, index) => {
+        const graphObj = { ...graphArr[index] };
         axios
             .put(`http://localhost:8000/api/graph/${id}`, {
                 type: type,
                 tableId: tableId,
+                tableTitle: tableTitle,
                 xAxis: x,
                 yAxis: y,
                 y2Axis: a,
@@ -122,29 +127,28 @@ const Dashboard = () => {
             })
             .then(() => {fetchGraphsData()})
             .catch((err) => {console.log(err.response)})
-        // const arrAfterIndex = [...graphArr.slice(index + 1)];
-        // setGraphArr(
-        //     [...graphArr.slice(0, index), graphObj].concat(arrAfterIndex)
-        // );
+        const arrAfterIndex = [...graphArr.slice(index + 1)];
+        setGraphArr(
+            [...graphArr.slice(0, index), graphObj].concat(arrAfterIndex)
+        );
     };
 
     // DELETING GRAPH
     const deleteGraph = async (id, graphIndex) => {
         axios
             .delete(`http://localhost:8000/api/graph/${id}`)
-            .then(() => {fetchGraphsData()})
-                // () => {
-                // const filteredGraphs = graphArr.filter((graph, index) => {
-                //     return graphIndex !== index;
-                // });
-                // setGraphArr(filteredGraphs);
-            // })
+            .then(() => {
+                const filteredGraphs = graphArr.filter((graph, index) => {
+                    return graphIndex !== index;
+                });
+                setGraphArr(filteredGraphs);
+            })
             .catch((err) => {console.log(err.response)});
-        
+        fetchGraphsData()
     };
 
     // DELETING TABLE
-    const deleteTable = (id, tableIndex) => {
+    const deleteTable = async (id, tableIndex) => {
         axios
             .delete(`http://localhost:8000/api/JSON/${id}`)
             .then(() => {
@@ -152,9 +156,9 @@ const Dashboard = () => {
                     return tableIndex !== index;
                 });
                 setTablesArr(filteredTables);
-                fetchTablesData();
             })
             .catch((err) => {console.log(err.response)})
+        fetchTablesData();
     };
 
     return (
@@ -194,14 +198,14 @@ const Dashboard = () => {
                 <div className='Graphs'>
                     <div className='Buttons'>
                         <form onSubmit={addGraph}>
-                            <select class='form-select form-select-sm mb-1' onChange={(e) => setGraphType(e.target.value)} defaultValue={graphType}>
+                            <select className='form-select form-select-sm mb-1' onChange={(e) => setGraphType(e.target.value)} defaultValue={graphType}>
                                 {graphTypes.map((type, index) => {
                                     return (
                                         <option key={index} value={type}>{type}</option>
                                     )
                                 })}
                             </select>
-                            <button type='button' class='btn btn-success'>Add</button>
+                            <button className='btn btn-warning'>Add Graph</button>
                         </form>
                     </div>
                     {graphArr.map((graph, index) => {
@@ -213,7 +217,8 @@ const Dashboard = () => {
                                 <p className='Color'>Y: {graph.yAxis}</p>
                                 <p className='Color'>A: {graph.y2Axis}</p>
                                 <p className='Color'>B: {graph.y3Axis}</p>
-                                <p className='Color'>Type: {graph.type}</p> */}
+                                <p className='Color'>Type: {graph.type}</p>
+                                <p className='Color'>Table: {graph.tableTitle}</p> */}
                                 { graph.type === 'Bar Chart' ?
                                     <SimpleBarChart
                                         tablesArr={ tablesArr }
