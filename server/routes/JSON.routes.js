@@ -1,4 +1,5 @@
 const JSONController = require('../controllers/JSON.controller');
+const { authenticate } = require('../middleware/jwt.config');
 
 module.exports = (app) => {
     app.post('/api/JSON', JSONController.createJSON);

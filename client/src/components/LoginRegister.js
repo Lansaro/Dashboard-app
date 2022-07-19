@@ -4,10 +4,11 @@ import Register from './Register';
 
 const LoginRegister = () => {
     return (
-        <div>
-            <Login />
-            <hr />
-            <Register />
+        <div className='LoginRegister'>
+            <div>
+                <Login />
+                <Register />
+            </div>
         </div>
     )
 };

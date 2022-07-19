@@ -10,7 +10,7 @@ const Header = () => {
         e.preventDefault();
         axios
             .post('http://localhost:8000/api/logout', {}, {withCredentials: true})
-            .then((res) => {navigate('/')})
+            .then((res) => {navigate('/login')})
             .catch(err => {console.log(err)});
     }
     return (
@@ -21,7 +21,7 @@ const Header = () => {
             </div>
             <div className='Navigation'>
                 <Link to={`/`}><span className='btn btn-secondary btn-sm'>To Home Page</span></Link>
-                <Link to={`/login`}><span className='btn btn-secondary btn-sm'>Login & Registration</span></Link>
+                <Link to={`/login`}><span className='btn btn-secondary btn-sm'>Login/Register</span></Link>
                 <Link to={`/login`}><span className='btn btn-secondary btn-sm' onClick={(e) => logout(e)}>Logout</span></Link>
             </div>
         </div>

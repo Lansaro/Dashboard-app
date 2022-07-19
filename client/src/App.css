@@ -1,8 +1,5 @@
 * {
   font-family: Helvetica;
-  /* font-family: -apple-system,
-    BlinkMacSystemFont,
-    sans-serif; */
 }
 
 .App-logo {
@@ -57,7 +54,7 @@
 }
 
 .Navigation {
-  width: 350px;
+  width: 300px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -89,7 +86,10 @@
   min-width: 500px;
   min-height: 400px;
   font-size: larger;
-  border: 2px solid white;
+}
+
+.Preview>table>tbody>tr>td {
+  border: 1px solid white;
 }
 
 .Tables {
@@ -99,17 +99,27 @@
   color: white;
 }
 
+.Tables>div>form>* {
+  margin: 10px;
+}
+
+input[type='file'] {
+  color: rgba(0, 0, 0, 0)
+}
+
 .TableRecord {
-  width: 90%;
-  height: 45px;
+  width: 100%;
+  height: 55px;
   margin: 10px auto;
   border-radius: 10px;
   position: relative;
   background-color: rgba(29, 29, 41, 255);
-  
+  display: flex;
+  align-items: center;
 }
 
 .Records>div {
+  margin: 10px;
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -122,15 +132,62 @@
 }
 
 .Graphs {
-  width: 65%;
+  width: 85%;
   min-height: 1000px;
   background-color: rgba(7, 7, 17, 255);
+}
+
+.LoginRegister {
+  width: 100%;
+  min-height: 1000px;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('./components/data-analytics.png');
+}
+
+.LoginRegister>div {
+  width: 800px;
+  margin: 50px auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.LoginRegister>div>div {
+  height: 100%;
+  width: 48%;
+  border-radius: 20px;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+}
+
+.LoginRegister>div>div>* {
+  margin: 20px;
+}
+
+.LoginRegister>div>div>form>* {
+  margin-top: 20px;
+}
+
+.LoginRegister>div>div>form>div {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .Chat {
   width: 20%;
   min-height: 1000px;
   background-color: rgba(17, 17, 29, 255);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Chat>* {
+  color: white;
+  font-size: 1.75em;
+  margin: 10px;
 }
 
 .Graph {
@@ -208,7 +265,7 @@
 .GraphType {
   font-weight: bold;
   font-style: italic;
-  font-size: 1.5em;
+  font-size: 1em;
   transform: rotate(-90deg);
   display: flex;
   align-items: center;

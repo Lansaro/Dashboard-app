@@ -58,7 +58,7 @@ const Register = (props) => {
                     <input type='password' name='confirmPassword' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
                 </div>
                 {err.confirmPassword ? <span>{err.confirmPassword.message}</span> : null}
-                <button>Submit</button>
+                <button type="button" class="btn btn-primary">Submit</button>
             </form>
         </div>
     )

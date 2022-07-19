@@ -8,6 +8,7 @@ import StackedAreaChart from './StackedAreaChart';
 import PercentAreaChart from './PercentAreaChart';
 import StackedBarChart from './StackedBarChart';
 import Table from './Table';
+import {useNavigate} from 'react-router-dom';
 
 const Dashboard = () => {
     const [graphArr, setGraphArr] = useState([]);
@@ -17,6 +18,7 @@ const Dashboard = () => {
     const fileReader = new FileReader();
     const [tableName, setTableName] = useState('');
     const [graphType, setGraphType] = useState('Bar Chart');
+    const navigate = useNavigate();
 
     // FILE READER
     const csvFileToArray = string => {
@@ -71,7 +73,7 @@ const Dashboard = () => {
         axios
             .get('http://localhost:8000/api/graph')
             .then((allGraphs) => {setGraphArr(allGraphs.data)})
-            .catch((err) => console.log(err.response));
+            .catch((err) => {console.log(err.response.data)});
     };
     const fetchTablesData = () => {
         axios
@@ -82,6 +84,7 @@ const Dashboard = () => {
     useEffect(() => {
         fetchGraphsData();
         fetchTablesData();
+    // eslint-disable-next-line
     }, []);
 
     // GRAPH TYPE SPECIFICATION
@@ -167,20 +170,20 @@ const Dashboard = () => {
                 <div className='Tables'>
                     <div>
                         <form>
+                            <h5>Add a Table</h5>
                             <div>
                                 <input
                                     type={'file'}
                                     id={'csvFileInput'}
                                     accept={'.csv'}
-                                    onChange={(e)=>setFile(e.target.files[0])}
+                                    onChange={(e)=>{setFile(e.target.files[0])}}
                                 />
                             </div>
                         <div>
-                            <label htmlFor='tableName'>Table Name</label>
-                            <input type='text' value={tableName} onChange={(e) => setTableName(e.target.value)} />
+                            <input placeholder='Table Name' type='text' value={tableName} onChange={(e) => setTableName(e.target.value)} />
                         </div>
-                            <button onClick={(e) => {handlePreview(e)}}>PREVIEW CSV</button>
-                            <button onClick={(e) => {handleSubmit(e)}}>SUBMIT CSV</button>
+                            <button onClick={(e) => {handlePreview(e)}} className='btn btn-secondary btn-sm'>PREVIEW CSV</button>
+                            <button onClick={(e) => {handleSubmit(e)}} className='btn btn-secondary btn-sm'>SUBMIT CSV</button>
                         </form>
                     </div>
                     <div className='Records'>
@@ -290,7 +293,9 @@ const Dashboard = () => {
                         )
                     })}
                 </div>
-                <div className='Chat'></div>
+                {/* <div className='Chat'> */}
+                    {/* <h5>Chat</h5> */}
+                {/* </div> */}
             </div>
         </div>
     )
