@@ -1,10 +1,11 @@
 import Logo from './iconImage2.png';
 import React from 'react';
-import {navigate} from '@reach/router';
+import {useNavigate} from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const Header = () => {
+    const navigate = useNavigate();
     const logout = (e) => {
         e.preventDefault();
         axios

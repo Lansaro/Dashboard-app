@@ -1,19 +1,20 @@
 import React, {useState} from 'react';
 import axios from 'axios';
-import {navigate} from '@reach/router';
+import {useNavigate} from 'react-router-dom';
 
 const Login = (props) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const login = (e) => {
+    const navigate = useNavigate();
+    const login = async (e) => {
         e.preventDefault();
         axios
             .post('http://localhost:8000/api/login', {
                 email: email,
                 password: password
             }, {withCredentials: true})
-            .then((res) => navigate('/'))
+            .then(() => navigate('/'))
             .catch(err => {setErrorMessage(err.response.data.msg)})
     };
     return (

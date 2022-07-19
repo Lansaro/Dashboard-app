@@ -21,18 +21,18 @@ const UserSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
-UserSchema.virtual('confirmPassword')
+UserSchema.virtual("confirmPassword")
     .get(() => this._confirmPassword)
     .set((value) => (this._confirmPassword = value));
 
-UserSchema.pre('validate', function (next) {
+UserSchema.pre("validate", function (next) {
     if (this.password !== this.confirmPassword) {
-        this.invalidate('confirmPassword', 'Password must match');
+        this.invalidate("confirmPassword", "Password must match");
     }
     next();
 });
 
-UserSchema.pre('save', function (next) {
+UserSchema.pre("validate", function (next) {
     bcrypt
         .hash(this.password, 10)
         .then((hash) => {
@@ -40,7 +40,7 @@ UserSchema.pre('save', function (next) {
             next();
         })
         .catch((err) => {
-            console.log('INSIDE ERROR BLOCK');
+            console.log("INSIDE ERROR BLOCK");
             console.log(err);
         });
 });

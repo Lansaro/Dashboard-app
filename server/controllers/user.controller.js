@@ -41,9 +41,6 @@ const logout = (req, res) => {
     res.json({ msg: 'logout successful' });
 };
 
-// const getAll = () => {
-// }
-
 const getLoggedInUser = (req, res) => {
     const decodedJWT = jwt.decode(req.cookies.usertoken, {complete: true});
     User.findById(decodedJWT.payload._id)

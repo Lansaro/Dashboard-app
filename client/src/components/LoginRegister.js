@@ -1,5 +1,4 @@
 import React from 'react';
-import {navigate} from '@reach/router';
 import Login from './Login';
 import Register from './Register';
 
@@ -9,9 +8,6 @@ const LoginRegister = () => {
             <Login />
             <hr />
             <Register />
-            <div>
-                <button onClick={() => navigate('/')}>To Home Page</button>
-            </div>
         </div>
     )
 };

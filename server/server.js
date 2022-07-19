@@ -6,7 +6,6 @@ const
     app = express(),
     cors = require('cors');
 
-
 require('./config/mongoose.config')(process.env.DB_NAME);
 
 app.use(cookieParser());

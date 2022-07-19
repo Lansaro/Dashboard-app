@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import axios from 'axios';
+import {useNavigate} from 'react-router-dom';
 
 const Register = (props) => {
     const [name, setName]  = useState('');
@@ -8,6 +9,7 @@ const Register = (props) => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [confirmReg, setConfirmReg] = useState('');
     const [err, setErr] = useState({});
+    const navigate = useNavigate();
 
     const register = async (e) => {
         e.preventDefault();
@@ -15,21 +17,25 @@ const Register = (props) => {
             .post('http://localhost:8000/api/register', {
                 name: name,
                 email: email,
-                password: password
+                password: password,
+                confirmPassword: confirmPassword
             }, {withCredentials: true})
-            .then((res) => {
+            .then(() => {
                 setName('');
                 setEmail('');
                 setPassword('');
                 setConfirmPassword('');
                 setErr({});
                 setConfirmReg('Thanks for registration!');
+                navigate('/');
             })
             .catch(err => {setErr(err.response.data.errors)})
     };
     return (
         <div>
             <h2>Register</h2>
+            <h4>{password}</h4>
+            <h4>{confirmPassword}</h4>
             {confirmReg ? <p>{confirmReg}</p> : null }
             <form onSubmit={register}>
                 <div>

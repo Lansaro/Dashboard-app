@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PreviewTable from './components/PreviewTable';
 import Dashboard from './components/Dashboard';
 import LoginRegister from './components/LoginRegister';
