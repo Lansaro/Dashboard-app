@@ -58,8 +58,12 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-right: 50px;
+}
+
+.Navigation>* {
+  margin-left: 10px;
 }
 
 .App-body {
@@ -93,7 +97,7 @@
 }
 
 .Tables {
-  width: 15%;
+  width: 20%;
   min-height: 1000px;
   background-color: rgba(23, 23, 33, 255);
   color: white;
@@ -132,7 +136,7 @@ input[type='file'] {
 }
 
 .Graphs {
-  width: 85%;
+  width: 80%;
   min-height: 1000px;
   background-color: rgba(7, 7, 17, 255);
 }
@@ -192,7 +196,7 @@ input[type='file'] {
 
 .Graph {
   width: 85%;
-  max-width: 800px;
+  max-width: 1000px;
   height: 650px;
   border-radius: 10px;
   margin: 20px auto;

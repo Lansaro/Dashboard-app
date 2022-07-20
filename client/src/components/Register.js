@@ -29,13 +29,11 @@ const Register = (props) => {
                 setConfirmReg('Thanks for registration!');
                 navigate('/');
             })
-            .catch(err => {setErr(err.response.data.errors)})
+            .catch(err => {setErr(err.response.data.errors)});
     };
     return (
         <div>
             <h2>Register</h2>
-            <h4>{password}</h4>
-            <h4>{confirmPassword}</h4>
             {confirmReg ? <p>{confirmReg}</p> : null }
             <form onSubmit={register}>
                 <div>
@@ -58,7 +56,7 @@ const Register = (props) => {
                     <input type='password' name='confirmPassword' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
                 </div>
                 {err.confirmPassword ? <span>{err.confirmPassword.message}</span> : null}
-                <button type="button" class="btn btn-primary">Submit</button>
+                <button className='btn btn-primary'>Submit</button>
             </form>
         </div>
     )

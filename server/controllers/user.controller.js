@@ -16,7 +16,7 @@ const login = async (req, res) => {
     User.findOne({ email: req.body.email })
         .then(user => {
             if (user === null) {
-                res.status(400).json({msg: 'Invalid login attempt 1'});
+                res.status(400).json({msg: 'Invalid login attempt'});
             } else {
                 bcrypt
                     .compare(req.body.password, user.password)
@@ -27,10 +27,10 @@ const login = async (req, res) => {
                                     {httpOnly: true, expires: new Date(Date.now() + 900000000)})
                                 .json({msg: 'success', userLogged: {username: `${user.name}`}});
                         } else {
-                            res.status(400).json({msg: 'Invalid login attempt 2'})
+                            res.status(400).json({msg: 'Invalid login attempt'})
                         }
                     })
-                    .catch(err => res.status(400).json({msg: 'Invalid login attempt 3'}));
+                    .catch(err => res.status(400).json({msg: 'Invalid login attempt'}));
             }
         })
         .catch(err => res.json(err));

@@ -20,8 +20,8 @@ const Header = () => {
                 <h1>Dashboard App</h1>
             </div>
             <div className='Navigation'>
-                <Link to={`/`}><span className='btn btn-secondary btn-sm'>To Home Page</span></Link>
-                <Link to={`/login`}><span className='btn btn-secondary btn-sm'>Login/Register</span></Link>
+                {window.location.href!=='http://localhost:3000/' ? <Link to={`/`}><span className='btn btn-secondary btn-sm'>To Home Page</span></Link> : null}
+                {/* <Link to={`/login`}><span className='btn btn-secondary btn-sm'>Login/Register</span></Link> */}
                 <Link to={`/login`}><span className='btn btn-secondary btn-sm' onClick={(e) => logout(e)}>Logout</span></Link>
             </div>
         </div>
